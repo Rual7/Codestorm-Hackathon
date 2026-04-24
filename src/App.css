@@ -316,6 +316,16 @@ select {
   margin-top: 4px;
 }
 
+.medical-sheet [contenteditable="true"] {
+  outline: none;
+  cursor: text;
+}
+
+.medical-sheet [contenteditable="true"]:focus {
+  background: #eef2ff;
+  border-radius: 6px;
+}
+
 .medical-sheet h3 {
   text-align: center;
   margin: 20px 0;
