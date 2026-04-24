@@ -6,11 +6,11 @@ type Props = {
 };
 
 const menu: { id: Page; label: string }[] = [
-  { id: 'dashboard', label: '🏠 Dashboard' },
-  { id: 'consultatii', label: '📅 Consultații' },
-  { id: 'document', label: '📝 Fișă medicală' },
-  { id: 'template-uri', label: '📄 Template-uri' },
-  { id: 'validator', label: '✅ Validator' },
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'consultatii', label: 'Consultații' },
+  { id: 'document', label: 'Fișă medicală' },
+  { id: 'template-uri', label: 'Șabloane' },
+  { id: 'validator', label: 'Validator' },
 ];
 
 export default function Sidebar({ activeTab, setActiveTab }: Props) {
