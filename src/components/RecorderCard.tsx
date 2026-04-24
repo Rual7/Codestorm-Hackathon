@@ -13,7 +13,7 @@ export default function RecorderCard({ isRecording, setIsRecording }: Props) {
         className={`record-button ${isRecording ? 'recording' : ''}`}
         onClick={() => setIsRecording(!isRecording)}
       >
-        {isRecording ? '⏹ Oprește înregistrarea' : '🎤 Pornește înregistrarea'}
+        {isRecording ? '⏹ Oprește înregistrarea' : 'Pornește înregistrarea'}
       </button>
 
       {isRecording && <div className="pulse-ring" />}

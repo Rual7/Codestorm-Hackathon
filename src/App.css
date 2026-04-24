@@ -257,12 +257,15 @@ select {
 }
 
 .badge {
-  background: var(--primary-light);
-  color: var(--primary);
-  padding: 7px 11px;
+  padding: 8px 14px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 800;
+}
+
+.badge.in-asteptare {
+  background: #dbe5f3;  
+  color: #2f4c7a;        
 }
 
 .badge.finalizat {
