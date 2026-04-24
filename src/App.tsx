@@ -10,6 +10,9 @@ import Templates from './pages/Templates';
 import Validator from './pages/Validator';
 import type { Page } from './data/types';
 
+import React from 'react';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
 import { useState } from 'react';
 import Groq from 'groq-sdk';
 
@@ -84,22 +87,41 @@ const App = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [activeTab, setActiveTab] = useState<Page>('dashboard');
 
+    const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+  
   return (
     <div className="dashboard-container">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <main className="main-content">
-        <TopBar activeTab={activeTab} />
+    <main className="main-content">
+      <TopBar activeTab={activeTab} />
 
-        {activeTab === 'dashboard' && (
-          <Dashboard isRecording={isRecording} setIsRecording={setIsRecording} />
-        )}
-        {activeTab === 'consultatii' && <Consultations />}
-        {activeTab === 'document' && <DocumentPage />}
-        {activeTab === 'template-uri' && <Templates />}
-        {activeTab === 'validator' && <Validator />}
-      </main>
-    </div>
+      {/* Secțiunea de control voce */}
+      <div className="voice-interface">
+        <p>Microphone: {listening ? 'on' : 'off'}</p>
+        <button onClick={SpeechRecognition.startListening}>Start</button>
+        <button onClick={SpeechRecognition.stopListening}>Stop</button>
+        <button onClick={resetTranscript}>Reset</button>
+        <p>{transcript}</p>
+      </div>
+
+      <hr />
+
+      {/* Randarea condiționată a paginilor */}
+      {activeTab === 'dashboard' && (
+        <Dashboard isRecording={isRecording} setIsRecording={setIsRecording} />
+      )}
+      {activeTab === 'consultatii' && <Consultations />}
+      {activeTab === 'document' && <DocumentPage />}
+      {activeTab === 'template-uri' && <Templates />}
+      {activeTab === 'validator' && <Validator />}
+    </main>
+  </div>
 )};
 
 export default App;
