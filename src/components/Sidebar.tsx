@@ -1,4 +1,5 @@
 import type { Page } from '../data/types';
+import AIChat from './AIChat';
 
 type Props = {
   activeTab: Page;
@@ -14,20 +15,24 @@ const menu: { id: Page; label: string }[] = [
 export default function Sidebar({ activeTab, setActiveTab }: Props) {
   return (
     <aside className="sidebar">
-      <div className="logo">AI-Doc Assist</div>
-      <p className="sidebar-subtitle">Medical documentation copilot</p>
+      <div className="sidebar-top">
+        <div className="logo">AI-Doc Assist</div>
+        <p className="sidebar-subtitle">Medical documentation copilot</p>
 
-      <nav>
-        {menu.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => setActiveTab(item.id)}
-            className={activeTab === item.id ? 'active' : ''}
-          >
-            {item.label}
-          </button>
-        ))}
-      </nav>
+        <nav>
+          {menu.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={activeTab === item.id ? 'active' : ''}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      <AIChat />
     </aside>
   );
 }
