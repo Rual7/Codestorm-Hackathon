@@ -8,7 +8,7 @@ export const consultatii: Consultation[] = [
     varsta: 34,
     ora: '10:30',
     medic: 'Dr. Andrei Ionescu',
-    status: 'In asteptare',
+    status: 'Finalizat',
     simptome: 'Febră, tuse seacă, dureri musculare de 2 zile.',
     diagnostic: 'Suspiciune infecție respiratorie acută.',
     recomandari: 'Hidratare, repaus, antitermic la nevoie, consult dacă simptomele se agravează.',
@@ -39,8 +39,20 @@ export const consultatii: Consultation[] = [
   },
 ];
 
-export const templates: MedicalTemplate[] = [
-  { id: 1, name: 'Fișă de Consultație Medicală', description: 'Model general pentru consultații de medicină de familie.' },
-  { id: 2, name: 'Scrisoare Medicală', description: 'Sumar medical pentru pacient sau medic specialist.' },
-  { id: 3, name: 'Recomandare Investigații', description: 'Document pentru analize, EKG, radiografie sau alte investigații.' },
+export const templates = [
+  {
+    id: 'fisa-consultatie',
+    name: 'Fișă de Consultație Medicală',
+    description: 'Model general pentru consultații de medicină de familie.',
+  },
+  {
+    id: 'scrisoare-medicala',
+    name: 'Scrisoare Medicală',
+    description: 'Sumar medical pentru pacient sau medic specialist.',
+  },
+  {
+    id: 'recomandare-investigatii',
+    name: 'Recomandare Investigații',
+    description: 'Document pentru analize, EKG, radiografie sau alte investigații.',
+  },
 ];

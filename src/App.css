@@ -489,3 +489,133 @@ textarea {
     align-items: flex-start;
   }
 }
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.template-card {
+  background: var(--primary-light);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.selected-template {
+  border: 2px solid var(--primary);
+  background: #eef2ff;
+}
+
+.template-card {
+  background: var(--primary-light);
+  border-radius: 18px;
+  padding: 26px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.template-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.letter-sheet,
+.referral-sheet {
+  max-width: 620px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.letter-sheet h3,
+.referral-sheet h3 {
+  text-align: center;
+  font-size: 24px;
+  margin: 24px 0 20px;
+  font-weight: 900;
+}
+
+.letter-line,
+.referral-line {
+  margin-bottom: 8px;
+  line-height: 1.7;
+  color: #111827;
+}
+
+.letter-line span {
+  display: inline-block;
+  min-width: 220px;
+  border-bottom: 1px solid #111827;
+}
+
+.letter-line.full {
+  border-bottom: 1px solid #111827;
+  padding-bottom: 4px;
+}
+
+.letter-section-title {
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.letter-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.letter-table th,
+.letter-table td {
+  border: 1px solid #777;
+  height: 30px;
+  padding: 6px;
+}
+
+.letter-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+}
+
+.referral-annex {
+  text-align: right;
+  font-weight: 900;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.referral-line {
+  border-bottom: 2px dotted #555;
+  padding-bottom: 2px;
+}
+
+.referral-line span {
+  display: inline-block;
+  min-width: 95px;
+}
+
+.center-line {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.tall-dots {
+  min-height: 92px;
+}
+
+.referral-signature {
+  margin-top: 44px;
+  text-align: right;
+  font-weight: 700;
+}
+
+.referral-signature div {
+  margin-top: 24px;
+  margin-left: auto;
+  width: 260px;
+  border-bottom: 2px dotted #555;
+}

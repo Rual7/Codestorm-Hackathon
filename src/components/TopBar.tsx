@@ -7,8 +7,6 @@ type Props = {
 const titles: Record<Page, string> = {
   dashboard: 'Dashboard',
   consultatii: 'Consultații',
-  document: 'Fișă de consultație',
-  'template-uri': 'Șabloane',
   validator: 'Validator document',
 };
 

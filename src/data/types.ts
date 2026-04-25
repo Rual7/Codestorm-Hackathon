@@ -1,4 +1,4 @@
-export type Page = 'dashboard' | 'consultatii' | 'document' | 'template-uri' | 'validator';
+export type Page = 'dashboard' | 'consultatii' | 'validator';
 
 export type ConsultationStatus = 'In asteptare' | 'In curs' | 'Finalizat';
 
