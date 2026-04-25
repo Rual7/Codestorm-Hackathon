@@ -21,8 +21,10 @@ const groq = new Groq({
 const App = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [activeTab, setActiveTab] = useState<Page>('dashboard');
+  const [aiOutput, setAiOutput] = useState('');
+
   const [generatedConsultation, setGeneratedConsultation] =
-  useState<Consultation>(consultatii[0]);
+    useState<Consultation>(consultatii[0]);
 
   const {
     transcript,
@@ -41,40 +43,44 @@ const App = () => {
           {
             role: 'user',
             content: `
-        Extrage informațiile din conversația medic-pacient și returnează STRICT JSON valid.
-        Nu folosi markdown. Nu scrie explicații.
+Extrage informațiile din conversația medic-pacient și returnează STRICT JSON valid.
+Nu folosi markdown. Nu scrie explicații.
 
-        Schema exactă:
-        {
-          "id": 999,
-          "pacient": "",
-          "cnp": "",
-          "varsta": 0,
-          "data": "",
-          "ora": "",
-          "medic": "",
-          "status": "In curs",
-          "simptome": "",
-          "diagnostic": "",
-          "investigatii": "",
-          "tratament": ""
-        }
+Schema exactă:
+{
+  "id": 999,
+  "pacient": "",
+  "cnp": "",
+  "varsta": 0,
+  "data": "",
+  "ora": "",
+  "medic": "",
+  "status": "In curs",
+  "simptome": "",
+  "diagnostic": "",
+  "investigatii": "",
+  "tratament": ""
+}
 
-        Reguli:
-        - Dacă nu știi o informație text, scrie "Nespecificat".
-        - Dacă nu știi vârsta, pune 0.
-        - Nu inventa CNP, nume, medic sau diagnostic.
-        - La diagnostic scrie doar ce este menționat de medic sau "Necesită validare medicală".
-        - Recomandările trebuie să fie doar cele menționate în conversație.
+Reguli:
+- Dacă nu știi o informație text, scrie "Nespecificat".
+- Dacă nu știi vârsta, pune 0.
+- Nu inventa CNP, nume, medic sau diagnostic.
+- La diagnostic scrie doar ce este menționat de medic sau "Necesită validare medicală".
+- Recomandările trebuie să fie doar cele menționate în conversație.
 
-        Conversație:
-        ${finalTranscript}
-                    `,
-                  },
-                ],
+Conversație:
+${finalTranscript}
+            `,
+          },
+        ],
       });
 
       const raw = completion.choices[0]?.message?.content || '{}';
+
+      // Afișăm output-ul brut de la AI ca să verificăm ce returnează
+      setAiOutput(raw);
+
       const cleanJson = raw.replace(/```json|```/g, '').trim();
       const parsed = JSON.parse(cleanJson) as Consultation;
 
@@ -100,6 +106,7 @@ const App = () => {
     }
 
     resetTranscript();
+    setAiOutput('');
 
     SpeechRecognition.startListening({
       continuous: true,
@@ -111,18 +118,30 @@ const App = () => {
 
   return (
     <div className="dashboard-container">
-    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-    <main className="main-content">
-      <TopBar activeTab={activeTab} />
-      <p>{transcript}</p>
-      {activeTab === 'dashboard' && (
-        <Dashboard isRecording={isRecording} onToggleRecording={handleToggleRecording} consultation={generatedConsultation}/>
-      )}
-      {activeTab === 'consultatii' && <Consultations />}
-      {activeTab === 'validator' && <Validator />}
-    </main>
-  </div>
-)};
+      <main className="main-content">
+        <TopBar activeTab={activeTab} />
+
+        <p>{transcript}</p>
+
+        <pre style={{ whiteSpace: 'pre-wrap' }}>
+          {aiOutput}
+        </pre>
+
+        {activeTab === 'dashboard' && (
+          <Dashboard
+            isRecording={isRecording}
+            onToggleRecording={handleToggleRecording}
+            consultation={generatedConsultation}
+          />
+        )}
+
+        {activeTab === 'consultatii' && <Consultations />}
+        {activeTab === 'validator' && <Validator />}
+      </main>
+    </div>
+  );
+};
 
 export default App;
