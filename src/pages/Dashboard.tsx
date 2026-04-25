@@ -10,10 +10,9 @@ import type { MedicalTemplate } from '../data/types';
 type Props = {
   isRecording: boolean;
   onToggleRecording: () => void;
+  consultation: Consultation;
 };
-
-export default function Dashboard({ isRecording, onToggleRecording }: Props) {
-  const activeConsultation = consultatii[0];
+export default function Dashboard({ isRecording, onToggleRecording,  consultation }: Props) {
   const [selectedTemplate, setSelectedTemplate] = useState<MedicalTemplate>(
     templates[0]
   );
@@ -63,12 +62,12 @@ export default function Dashboard({ isRecording, onToggleRecording }: Props) {
       </div>
 
       {selectedTemplate.id === 'scrisoare-medicala' ? (
-        <ScrisoareMedicalaPreview consultation={activeConsultation} />
-      ) : selectedTemplate.id === 'recomandare-investigatii' ? (
-        <BiletTrimiterePreview consultation={activeConsultation} />
-      ) : (
-        <MedicalFormPreview consultation={activeConsultation} />
-      )}
+          <ScrisoareMedicalaPreview consultation={consultation} />
+        ) : selectedTemplate.id === 'recomandare-investigatii' ? (
+          <BiletTrimiterePreview consultation={consultation} />
+        ) : (
+          <MedicalFormPreview consultation={consultation} />
+        )}
     </div>
     </section>
   );

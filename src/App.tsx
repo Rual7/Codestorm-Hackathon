@@ -6,85 +6,23 @@ import TopBar from './components/TopBar';
 import Dashboard from './pages/Dashboard';
 import Consultations from './pages/Consultations';
 import Validator from './pages/Validator';
-import type { Page } from './data/types';
+import type { Page, Consultation } from './data/types';
 
-import React from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-
-
 import { useState } from 'react';
 import Groq from 'groq-sdk';
+import { consultatii } from './data/mockData';
 
 const groq = new Groq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY,
   dangerouslyAllowBrowser: true,
 });
 
-interface ChatMessage {
-  prompt: string;
-  response: string;
-}
-
 const App = () => {
-  // State to manage the input value
-  const [inputValue, setInputValue] = useState('');
-  // State to manage chat messages
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-
-  // Function to handle input change
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  // Function to handle button click
-  const handleSend = async () => {
-    if (inputValue.trim() === '') return;
-
-    const chatPrompt = `You: ${inputValue}`;
-
-    try {
-      const chatCompletion = await groq.chat.completions.create({
-        messages: [
-          {
-            role: 'user',
-            content: inputValue,
-          },
-        ],
-        model: 'llama-3.1-8b-instant',
-      });
-
-      const responseContent =
-        chatCompletion.choices[0]?.message?.content || 'No response';
-
-      const newChatMessage: ChatMessage = {
-        prompt: chatPrompt,
-        response: responseContent,
-      };
-
-      // Add the new chat message to the chat messages
-      setChatMessages([...chatMessages, newChatMessage]);
-    } catch (error) {
-      console.error('Error fetching chat completion:', error);
-      const errorMessage = 'Error fetching chat completion';
-      const newChatMessage: ChatMessage = {
-        prompt: chatPrompt,
-        response: errorMessage,
-      };
-      // Add the error message to the chat messages
-      setChatMessages([...chatMessages, newChatMessage]);
-    } finally {
-      // Clear the input field
-      setInputValue('');
-    }
-  };
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault(); // Prevent the default action (newline)
-      handleSend();
-    }
-  }
-
   const [isRecording, setIsRecording] = useState(false);
+  const [activeTab, setActiveTab] = useState<Page>('dashboard');
+  const [generatedConsultation, setGeneratedConsultation] =
+  useState<Consultation>(consultatii[0]);
 
   const {
     transcript,
@@ -92,6 +30,60 @@ const App = () => {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+
+  const generateMedicalForm = async (finalTranscript: string) => {
+    if (!finalTranscript.trim()) return;
+
+    try {
+      const completion = await groq.chat.completions.create({
+        model: 'llama-3.1-8b-instant',
+        messages: [
+          {
+            role: 'user',
+            content: `
+        Extrage informațiile din conversația medic-pacient și returnează STRICT JSON valid.
+        Nu folosi markdown. Nu scrie explicații.
+
+        Schema exactă:
+        {
+          "id": 999,
+          "pacient": "",
+          "cnp": "",
+          "varsta": 0,
+          "data": "",
+          "ora": "",
+          "medic": "",
+          "status": "In curs",
+          "simptome": "",
+          "diagnostic": "",
+          "investigatii": "",
+          "tratament": ""
+        }
+
+        Reguli:
+        - Dacă nu știi o informație text, scrie "Nespecificat".
+        - Dacă nu știi vârsta, pune 0.
+        - Nu inventa CNP, nume, medic sau diagnostic.
+        - La diagnostic scrie doar ce este menționat de medic sau "Necesită validare medicală".
+        - Recomandările trebuie să fie doar cele menționate în conversație.
+
+        Conversație:
+        ${finalTranscript}
+                    `,
+                  },
+                ],
+      });
+
+      const raw = completion.choices[0]?.message?.content || '{}';
+      const cleanJson = raw.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(cleanJson) as Consultation;
+
+      setGeneratedConsultation(parsed);
+    } catch (error) {
+      console.error('Error generating medical form:', error);
+      alert('Eroare la generarea fișei.');
+    }
+  };
 
   const handleToggleRecording = () => {
     if (!browserSupportsSpeechRecognition) {
@@ -103,11 +95,7 @@ const App = () => {
       SpeechRecognition.stopListening();
       setIsRecording(false);
 
-      console.log('Transcript final:', transcript);
-
-      // aici folosești transcript-ul pentru AI //
-      setInputValue(transcript);
-
+      generateMedicalForm(transcript);
       return;
     }
 
@@ -121,8 +109,6 @@ const App = () => {
     setIsRecording(true);
   };
 
-  const [activeTab, setActiveTab] = useState<Page>('dashboard');
-
   return (
     <div className="dashboard-container">
     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -130,10 +116,8 @@ const App = () => {
     <main className="main-content">
       <TopBar activeTab={activeTab} />
 
-      <p>{transcript}</p>
-      {/* Randarea condiționată a paginilor */}
       {activeTab === 'dashboard' && (
-        <Dashboard isRecording={isRecording} onToggleRecording={handleToggleRecording} />
+        <Dashboard isRecording={isRecording} onToggleRecording={handleToggleRecording} consultation={generatedConsultation}/>
       )}
       {activeTab === 'consultatii' && <Consultations />}
       {activeTab === 'validator' && <Validator />}
