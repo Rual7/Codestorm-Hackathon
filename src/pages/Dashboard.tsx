@@ -3,9 +3,10 @@ import ConsultationsCard from '../components/ConsultationsCard';
 import MedicalFormPreview from '../components/MedicalFormPreview';
 import ScrisoareMedicalaPreview from '../components/MedicalLetterPreview';
 import BiletTrimiterePreview from '../components/MedicalSendLetterPreview';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { consultatii, templates } from '../data/mockData';
 import type { MedicalTemplate, Consultation } from '../data/types';
+import jsPDF from 'jspdf';
 
 type Props = {
   isRecording: boolean;
@@ -24,9 +25,90 @@ export default function Dashboard({
 
   const dashboardMedic = 'Dr. Andrei Ionescu';
 
-  const consultationWithDashboardMedic: Consultation = {
-    ...consultation,
-    medic: dashboardMedic,
+  const [currentConsultation, setCurrentConsultation] =
+    useState<Consultation>({
+      ...consultation,
+      medic: dashboardMedic,
+    });
+
+  useEffect(() => {
+    setCurrentConsultation({
+      ...consultation,
+      medic: dashboardMedic,
+    });
+  }, [consultation]);
+
+  const handleFormSave = (updated: Consultation) => {
+    setCurrentConsultation({
+      ...updated,
+      medic: dashboardMedic,
+    });
+
+    alert('Modificările au fost salvate ✅');
+  };
+
+  const handleSaveDocument = () => {
+    const finalData: Consultation = {
+      ...currentConsultation,
+      medic: dashboardMedic,
+    };
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text('FISA DE CONSULTATIE MEDICALA', 20, 20);
+
+    doc.setFontSize(11);
+
+    let y = 35;
+
+    doc.text('Unitate medicala: Clinica Demo', 20, y);
+    y += 8;
+
+    doc.text(`Medic: ${finalData.medic}`, 20, y);
+    y += 8;
+
+    doc.text(`Pacient: ${finalData.pacient || '-'}`, 20, y);
+    y += 8;
+
+    doc.text(`CNP: ${finalData.cnp || '-'}`, 20, y);
+    y += 8;
+
+    doc.text(
+      `Varsta: ${
+        finalData.varsta === 0 ? 'Nespecificat' : `${finalData.varsta} ani`
+      }`,
+      20,
+      y
+    );
+    y += 8;
+
+    doc.text(`Data: ${finalData.data || '-'}`, 20, y);
+    y += 8;
+
+    doc.text(`Ora: ${finalData.ora || '-'}`, 20, y);
+    y += 12;
+
+    doc.text('Simptome:', 20, y);
+    y += 7;
+    doc.text(doc.splitTextToSize(finalData.simptome || '-', 170), 20, y);
+    y += 20;
+
+    doc.text('Diagnostic:', 20, y);
+    y += 7;
+    doc.text(doc.splitTextToSize(finalData.diagnostic || '-', 170), 20, y);
+    y += 20;
+
+    doc.text('Investigatii:', 20, y);
+    y += 7;
+    doc.text(doc.splitTextToSize(finalData.investigatii || '-', 170), 20, y);
+    y += 20;
+
+    doc.text('Recomandari:', 20, y);
+    y += 7;
+    doc.text(doc.splitTextToSize(finalData.recomandari || '-', 170), 20, y);
+
+    doc.save(`fisa-medicala-${finalData.pacient || 'pacient'}.pdf`);
   };
 
   return (
@@ -86,20 +168,19 @@ export default function Dashboard({
             </p>
           </div>
 
-          <button className="btn-primary">Salvează documentul</button>
+          <button className="btn-primary" onClick={handleSaveDocument}>
+            Salvează documentul
+          </button>
         </div>
 
         {selectedTemplate.id === 'scrisoare-medicala' ? (
-          <ScrisoareMedicalaPreview
-            consultation={consultationWithDashboardMedic}
-          />
+          <ScrisoareMedicalaPreview consultation={currentConsultation} />
         ) : selectedTemplate.id === 'recomandare-investigatii' ? (
-          <BiletTrimiterePreview
-            consultation={consultationWithDashboardMedic}
-          />
+          <BiletTrimiterePreview consultation={currentConsultation} />
         ) : (
           <MedicalFormPreview
-            consultation={consultationWithDashboardMedic}
+            consultation={currentConsultation}
+            onSave={handleFormSave}
           />
         )}
       </div>

@@ -3,7 +3,9 @@ import type { Consultation } from "../data/types";
 
 type Props = {
   consultation: Consultation;
+  onSave: (updated: Consultation) => void;
 };
+
 
 export default function MedicalFormPreview({ consultation }: Props) {
   const [data, setData] = useState(consultation);
@@ -183,7 +185,11 @@ export default function MedicalFormPreview({ consultation }: Props) {
         </tbody>
       </table>
 
-      <button className="btn-primary">Salvează modificările</button>
-    </div>
+      <button
+        className="btn-primary"
+        onClick={() => onSave(data)}
+      >
+        Salvează modificările
+      </button>    </div>
   );
 }
