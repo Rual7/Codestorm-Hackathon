@@ -115,7 +115,7 @@ const App = () => {
 
     <main className="main-content">
       <TopBar activeTab={activeTab} />
-
+      <p>{transcript}</p>
       {activeTab === 'dashboard' && (
         <Dashboard isRecording={isRecording} onToggleRecording={handleToggleRecording} consultation={generatedConsultation}/>
       )}
