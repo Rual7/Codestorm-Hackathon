@@ -105,7 +105,7 @@ const App = () => {
 
       console.log('Transcript final:', transcript);
 
-      // aici folosești transcript-ul pentru AI
+      // aici folosești transcript-ul pentru AI //
       setInputValue(transcript);
 
       return;
