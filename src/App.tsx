@@ -19,7 +19,6 @@ const groq = new Groq({
 const App = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [activeTab, setActiveTab] = useState<Page>('dashboard');
-  const [aiOutput, setAiOutput] = useState('');
 
   const [generatedConsultation, setGeneratedConsultation] =
     useState<Consultation>(consultatii[0]);
@@ -41,31 +40,33 @@ const App = () => {
           {
             role: 'user',
             content: `
-Extrage informațiile din conversația medic-pacient și returnează STRICT JSON valid.
-Nu folosi markdown. Nu scrie explicații.
+Extrage informațiile medicale din transcriere și returnează STRICT JSON valid.
+Nu folosi markdown. Nu scrie explicații. Nu adăuga câmpuri în plus.
 
 Schema exactă:
 {
-  "id": 999,
   "pacient": "",
   "cnp": "",
   "varsta": 0,
-  "data": "",
-  "ora": "",
-  "medic": "",
-  "status": "In curs",
   "simptome": "",
   "diagnostic": "",
   "investigatii": "",
-  "recomandari": ""
+  "recomandari": "",
+  "observatii": ""
 }
 
 Reguli:
+- Returnează doar JSON valid parsabil cu JSON.parse().
+- Păstrează exact cheile din schema de mai sus.
 - Dacă nu știi o informație text, scrie "Nespecificat".
 - Dacă nu știi vârsta, pune 0.
-- Nu inventa CNP, nume, medic sau diagnostic.
-- La diagnostic scrie doar ce este menționat de medic sau "Necesită validare medicală".
-- Recomandările trebuie să fie doar cele menționate în conversație.
+- Nu inventa CNP, nume pacient sau diagnostic.
+- La "diagnostic", scrie doar diagnosticul menționat explicit de medic.
+- Dacă nu există diagnostic clar, scrie "Necesită validare medicală".
+- La "investigatii", scrie doar investigațiile menționate explicit.
+- La "recomandari", scrie doar recomandările sau tratamentul menționat explicit.
+- Nu transforma simptomele în diagnostic.
+- Nu adăuga recomandări din cunoștințele tale.
 
 Conversație:
 ${finalTranscript}
@@ -75,12 +76,24 @@ ${finalTranscript}
       });
 
       const raw = completion.choices[0]?.message?.content || '{}';
-      setAiOutput(raw);
-
       const cleanJson = raw.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(cleanJson) as Consultation;
+      const parsed = JSON.parse(cleanJson) as Partial<Consultation>;
 
-      setGeneratedConsultation(parsed);
+      const now = new Date();
+
+      const currentDate = now.toLocaleDateString('ro-RO'); // 25.04.2026
+      const currentTime = now.toLocaleTimeString('ro-RO', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      setGeneratedConsultation((prev) => ({
+        ...prev,
+        ...parsed,
+        data: currentDate,
+        ora: currentTime,
+}));
+
     } catch (error) {
       console.error('Error generating medical form:', error);
       alert('Eroare la generarea fișei.');
@@ -101,7 +114,6 @@ ${finalTranscript}
     }
 
     resetTranscript();
-    setAiOutput('');
 
     SpeechRecognition.startListening({
       continuous: true,
@@ -117,12 +129,6 @@ ${finalTranscript}
 
       <main className="main-content">
         <TopBar activeTab={activeTab} />
-
-        <p>{transcript}</p>
-
-        <pre style={{ whiteSpace: 'pre-wrap' }}>
-          {aiOutput}
-        </pre>
 
         {activeTab === 'dashboard' && (
           <Dashboard

@@ -29,13 +29,7 @@ export default function MedicalFormPreview({ consultation }: Props) {
 
         <div>
           <span>Medic</span>
-          <strong
-            contentEditable
-            suppressContentEditableWarning
-            onBlur={(e) => updateField("medic", e.currentTarget.innerText)}
-          >
-            {data.medic}
-          </strong>
+          <strong>{data.medic}</strong>
         </div>
       </div>
 
@@ -71,7 +65,7 @@ export default function MedicalFormPreview({ consultation }: Props) {
             suppressContentEditableWarning
             onBlur={(e) => updateField("varsta", e.currentTarget.innerText)}
           >
-            {data.varsta} ani
+            {data.varsta === 0 ? 'Nespecificat' : `${data.varsta} ani`}
           </div>
         </div>
 
@@ -133,16 +127,58 @@ export default function MedicalFormPreview({ consultation }: Props) {
         <tbody>
           <tr>
             <td>1</td>
-            <td>{data.investigatii}</td>
-            <td>{data.recomandari}</td>
-            <td>Conform consultației</td>
+
+            <td
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                updateField("investigatii", e.currentTarget.innerText)
+              }
+            >
+              {data.investigatii === "Nespecificat" ? "-" : data.investigatii}
+            </td>
+
+            <td
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                updateField("recomandari", e.currentTarget.innerText)
+              }
+            >
+              {data.recomandari === "Nespecificat" ? "-" : data.recomandari}
+            </td>
+
+            <td
+              contentEditable
+              suppressContentEditableWarning
+            >
+              Conform consultației
+            </td>
           </tr>
 
           <tr>
             <td>2</td>
-            <td>Consult specialist</td>
-            <td>Opțional</td>
-            <td>Dacă simptomele persistă</td>
+
+            <td
+              contentEditable
+              suppressContentEditableWarning
+            >
+              Consult specialist
+            </td>
+
+            <td
+              contentEditable
+              suppressContentEditableWarning
+            >
+              Opțional
+            </td>
+
+            <td
+              contentEditable
+              suppressContentEditableWarning
+            >
+              Dacă simptomele persistă
+            </td>
           </tr>
         </tbody>
       </table>

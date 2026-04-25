@@ -22,6 +22,13 @@ export default function Dashboard({
     templates[0]
   );
 
+  const dashboardMedic = 'Dr. Andrei Ionescu';
+
+  const consultationWithDashboardMedic: Consultation = {
+    ...consultation,
+    medic: dashboardMedic,
+  };
+
   return (
     <section className="content-grid">
       <RecorderCard
@@ -83,11 +90,17 @@ export default function Dashboard({
         </div>
 
         {selectedTemplate.id === 'scrisoare-medicala' ? (
-          <ScrisoareMedicalaPreview consultation={consultation} />
+          <ScrisoareMedicalaPreview
+            consultation={consultationWithDashboardMedic}
+          />
         ) : selectedTemplate.id === 'recomandare-investigatii' ? (
-          <BiletTrimiterePreview consultation={consultation} />
+          <BiletTrimiterePreview
+            consultation={consultationWithDashboardMedic}
+          />
         ) : (
-          <MedicalFormPreview consultation={consultation} />
+          <MedicalFormPreview
+            consultation={consultationWithDashboardMedic}
+          />
         )}
       </div>
     </section>
