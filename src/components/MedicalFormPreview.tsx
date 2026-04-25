@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Consultation } from "../data/types";
 
 type Props = {
@@ -7,6 +7,10 @@ type Props = {
 
 export default function MedicalFormPreview({ consultation }: Props) {
   const [data, setData] = useState(consultation);
+
+  useEffect(() => {
+    setData(consultation);
+  }, [consultation]);
 
   function updateField(field: keyof Consultation, value: string) {
     setData((prev) => ({
@@ -129,9 +133,9 @@ export default function MedicalFormPreview({ consultation }: Props) {
         <tbody>
           <tr>
             <td>1</td>
-            <td>Analize sânge</td>
-            <td>La nevoie</td>
-            <td>Conform simptomelor</td>
+            <td>{data.investigatii}</td>
+            <td>{data.recomandari}</td>
+            <td>Conform consultației</td>
           </tr>
 
           <tr>

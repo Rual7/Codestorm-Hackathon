@@ -1,5 +1,3 @@
-// App.tsx
-
 import './App.css';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -59,7 +57,7 @@ Schema exactă:
   "simptome": "",
   "diagnostic": "",
   "investigatii": "",
-  "tratament": ""
+  "recomandari": ""
 }
 
 Reguli:
@@ -77,8 +75,6 @@ ${finalTranscript}
       });
 
       const raw = completion.choices[0]?.message?.content || '{}';
-
-      // Afișăm output-ul brut de la AI ca să verificăm ce returnează
       setAiOutput(raw);
 
       const cleanJson = raw.replace(/```json|```/g, '').trim();
@@ -100,7 +96,6 @@ ${finalTranscript}
     if (listening) {
       SpeechRecognition.stopListening();
       setIsRecording(false);
-
       generateMedicalForm(transcript);
       return;
     }
