@@ -1,17 +1,18 @@
 type Props = {
   isRecording: boolean;
-  setIsRecording: (value: boolean) => void;
+  onToggleRecording: () => void;
 };
 
-export default function RecorderCard({ isRecording, setIsRecording }: Props) {
+export default function RecorderCard({ isRecording, onToggleRecording }: Props) {
+
   return (
     <div className="card recorder-card">
       <h3>Înregistrare consultație</h3>
-      <p>Simulăm captarea audio. Într-un produs real, AI-ul ar transcrie conversația și ar completa fișa medicală.</p>
+      <p>Simulăm captarea audio. AI-ul va transcrie conversația și va completa fișa medicală.</p>
 
       <button
         className={`record-button ${isRecording ? 'recording' : ''}`}
-        onClick={() => setIsRecording(!isRecording)}
+        onClick={onToggleRecording}
       >
         {isRecording ? '⏹ Oprește înregistrarea' : 'Pornește înregistrarea'}
       </button>

@@ -13,6 +13,7 @@ import type { Page } from './data/types';
 import React from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
+
 import { useState } from 'react';
 import Groq from 'groq-sdk';
 
@@ -84,16 +85,46 @@ const App = () => {
       handleSend();
     }
   }
-  const [isRecording, setIsRecording] = useState(false);
-  const [activeTab, setActiveTab] = useState<Page>('dashboard');
 
-    const {
+  const [isRecording, setIsRecording] = useState(false);
+
+  const {
     transcript,
     listening,
     resetTranscript,
-    browserSupportsSpeechRecognition
+    browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
-  
+
+  const handleToggleRecording = () => {
+    if (!browserSupportsSpeechRecognition) {
+      alert('Browserul nu suportă recunoașterea vocală.');
+      return;
+    }
+
+    if (listening) {
+      SpeechRecognition.stopListening();
+      setIsRecording(false);
+
+      console.log('Transcript final:', transcript);
+
+      // aici folosești transcript-ul pentru AI
+      setInputValue(transcript);
+
+      return;
+    }
+
+    resetTranscript();
+
+    SpeechRecognition.startListening({
+      continuous: true,
+      language: 'ro-RO',
+    });
+
+    setIsRecording(true);
+  };
+
+  const [activeTab, setActiveTab] = useState<Page>('dashboard');
+
   return (
     <div className="dashboard-container">
     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -101,20 +132,10 @@ const App = () => {
     <main className="main-content">
       <TopBar activeTab={activeTab} />
 
-      {/* Secțiunea de control voce */}
-      <div className="voice-interface">
-        <p>Microphone: {listening ? 'on' : 'off'}</p>
-        <button onClick={SpeechRecognition.startListening}>Start</button>
-        <button onClick={SpeechRecognition.stopListening}>Stop</button>
-        <button onClick={resetTranscript}>Reset</button>
-        <p>{transcript}</p>
-      </div>
-
-      <hr />
-
+      <p>{transcript}</p>
       {/* Randarea condiționată a paginilor */}
       {activeTab === 'dashboard' && (
-        <Dashboard isRecording={isRecording} setIsRecording={setIsRecording} />
+        <Dashboard isRecording={isRecording} onToggleRecording={handleToggleRecording} />
       )}
       {activeTab === 'consultatii' && <Consultations />}
       {activeTab === 'document' && <DocumentPage />}
