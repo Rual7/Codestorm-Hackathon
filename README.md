@@ -1,73 +1,142 @@
-# React + TypeScript + Vite
+# ⚡ AI-Doc Assist – CodeStorm Hackathon Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Overview
 
-Currently, two official plugins are available:
+AI-Doc Assist is an intelligent document automation system developed during the **CodeStorm Hackathon 2026**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The project addresses the challenge of:
+> **Automating, validating, and intelligently processing documents**
 
-## React Compiler
+Our solution focuses on a real-world use case in the **medical domain**, where documentation is time-consuming and repetitive.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ❗ Problem
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+In medical environments, a significant portion of time is spent on documentation instead of patient care.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Up to **30–35% of a doctor's time** is used for completing documents :contentReference[oaicite:1]{index=1}
+- Documentation is mostly **manual**
+- Existing digital systems (EHR) often **increase complexity instead of reducing it**
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 💡 Solution
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+AI-Doc Assist is a **digital assistant powered by AI** that:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. 🎙️ Records the medical consultation
+2. 🧠 Transcribes speech into text
+3. ⚙️ Processes and structures the information
+4. 📄 Automatically fills standard medical documents
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+> The result: doctors only need to **validate**, not manually write documents.
+
+---
+
+## 🧠 How It Works (Architecture)
+
+The system follows a modular pipeline:
+
+Audio Input (Consultation)
+↓
+Speech Recognition Module
+↓
+LLM Processing (NLP)
+↓
+Data Structuring & Matching
+↓
+Document Completion
+↓
+Validation (Automated + Manual)
+↓
+Final Document Generation
+
+---
+
+### 🔧 Key Technologies
+
+- Speech Recognition (audio → text)
+- LLM (LLaMA 3.1 via Groq API) :contentReference[oaicite:2]{index=2}
+- Natural Language Processing (NLP)
+- Structured data mapping & validation
+
+---
+
+## 🧩 Features by Complexity Level
+
+The project follows the hackathon's 3-level structure.
+
+### 🟢 Level 1 – Basic
+- Detect missing or incomplete fields
+- Validate data consistency
+- Ensure correct document structure
+- Compare with existing data
+
+### 🟡 Level 2 – Intermediate
+- Cross-document synchronization
+- Data mapping between documents
+- Conflict detection
+
+### 🔴 Level 3 – Advanced
+- Semantic analysis of content
+- Automatic migration to new templates
+- AI assistant (interactive chat)
+- Context-aware document generation
+
+---
+
+## 🚀 Impact
+
+- ⏱️ Reduces documentation time from **10 minutes → 1–2 minutes per consultation**
+- 📈 Frees up **~30% of working time** for patient care  
+- 🧾 Improves accuracy and consistency of documents  
+- 🤖 Reduces human error through validation layers  
+
+---
+
+## 🌍 Scalability & Use Cases
+
+Although built for healthcare, the solution is **domain-independent**:
+
+- ⚖️ Legal (contracts, case notes)
+- 🏢 Insurance (claims processing)
+- 🧑‍💼 HR (interviews, reports)
+- 🎓 Education (academic documentation)
+
+> The system can be integrated as an **add-on module** into existing platforms
+
+---
+
+## 🏗️ Hackathon Context
+
+This project was built during **CodeStorm Hackathon @ Transilvania 2026**, which focused on:
+
+- Document automation & validation
+- AI-assisted workflows
+- Scalable digital solutions
+
+---
+
+## 👨‍💻 Team
+
+- Pana Ioana  
+- Palau Antonia-Elena  
+- Oncioiu Ionut-Raul  
+- Palade Catalin-Mihai
+
+Mentor: Sebastian Mezei
+
+---
+
+## 🔮 Future Improvements
+
+- Real-time processing optimization
+- Integration with hospital systems (EHR)
+- Better medical semantic understanding
+- Multi-language support
+- Security & compliance (GDPR, HIPAA)
+
+---
+
+This project was developed for educational and hackathon purposes.
